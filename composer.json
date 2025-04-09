@@ -1,0 +1,22 @@
+{
+    "name": "nosyos/hivephp",
+    "description": "HivePHP is a lightweight and efficient REST API framework for PHP, designed to simplify API development with minimal setup and maximum performance.",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "12.1.x-dev"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nosyos\\Hivephp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Yoshitaka Nose",
+            "email": "yoshitaka.nose@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

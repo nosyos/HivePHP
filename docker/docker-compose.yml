@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  hivephp:
+    container_name: hivephp
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    # Depends on your environment settings 
+    # (adjust UID and GID as necessary based on your host system).
+    #    user: "1000:1000"
+    volumes:
+      - ../../HivePHP:/app
+    working_dir: /app
+    tty: true
+
