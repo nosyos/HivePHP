@@ -20,6 +20,7 @@ class HivePHP {
     private FrameworkConfig $config;
     //private Request $request;
     private Context $context;
+    private HttpServer $httpServer;
 
     public function __construct() {
         $this->handlers = new Handlers();
@@ -49,7 +50,7 @@ class HivePHP {
         $this->tree->addPath($method, $path);
     }
 
-    public function callHandler(): void {
+    public function callHandler(): string {
         $parsedUrl = parse_url($_SERVER['REQUEST_URI']);
 
         $this->context->setQueryParams();
@@ -62,8 +63,6 @@ class HivePHP {
         }
         
         $this->context->setFormData();
-        //echo json_encode($this->context);
-
 
         $response = $this->router->resolve(
             $_SERVER['REQUEST_METHOD'],
@@ -73,12 +72,33 @@ class HivePHP {
 
         if (is_array($response)) {
             $r = new JsonResponse(body: $response);
-            $resp = $r->send();
+            $ret = json_encode($r->send());
+
+            if ($ret === false) {
+                var_dump(json_last_error_msg());
+                return "callHandler Error";
+            }
+
+            return $ret;
         } else {
             // TODO: if not have Response interface, error.
-            $resp = $response->send();
+            $response->send();
         }
-        echo $resp;
+        
+        return "Error";
+
+    }
+
+    public function start() {
+        $this->httpServer = 
+            new HttpServer(
+                function() {
+                    return $this->callHandler();
+                },
+                "127.0.0.1", 
+                8008
+            );
+        $this->httpServer->start();
     }
 
 }

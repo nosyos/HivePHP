@@ -49,7 +49,7 @@ class HivePHPTest extends TestCase {
 
     }
  */
-
+/*
     public function testCallFunctionWithPathParam(): void {
         $hivephp = HivePHP::initialize();
         $hivephp->addHandler('GET', '/user/:id', function (Context $context){
@@ -65,5 +65,27 @@ class HivePHPTest extends TestCase {
         $output = json_decode(ob_get_clean(), true);
         $this->assertSame($output["resp"], "This is /user/222");
 
+    }
+ */
+    public function testHttpServerAndResponse(): void {
+
+        $serverProcess = proc_open("php tests/TestScript.php", [], $pipes);
+        
+        if (!is_resource($serverProcess)) {
+            die("Failed to start server process");
+        }
+        sleep(5);
+
+        $response = file_get_contents('http://127.0.0.1:8008/user/222');
+        if ($response === false) {
+            var_dump(error_get_last());
+        }
+
+        proc_terminate($serverProcess);
+        proc_close($serverProcess);
+
+        $response = json_decode($response);
+
+        $this->assertSame($response["resp"], "This is /user/222");
     }
 }

@@ -3,5 +3,5 @@
 namespace Nosyos\Hivephp\Response;
 
 interface Response {
-    public function send(): string;
+    public function send(): array;
 }

@@ -15,16 +15,20 @@ class JsonResponse implements Response {
             $this->headers['Content-Type'] = 'application/json; charset=UTF-8';
             $this->headers['Cache-Control'] = 'no-cache, must-revalidate';
         }
-        $this->headers = $headers;
+
+        foreach ($headers as $key => $val) {
+            $this->headers[$key] = $val;
+        }
         $this->body = $body;
     }
 
-    public function send(): string {
-        http_response_code($this->responseCode);
-        foreach($this->headers as $key => $val) {
-            header("$key: $val");
-        }
-        return json_encode($this->body);
+    public function send(): array {
+        $resp = [];
+        $resp['responseCode'] = $this->responseCode;
+        $resp['headers'] = $this->headers;
+        $resp['body'] = $this->body;
+
+        return $resp;
     }
 
     public function __toString() {
